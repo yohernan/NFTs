@@ -1,0 +1,183 @@
+---
+title: "Final Project - NFTs"
+author: "Matthew Greene & Yohari Hernandez"
+date: "11/25/2020"
+output: slidy_presentation
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE)
+
+#Packages
+library(ggplot2) ## Loaded for plotting
+library(tidyverse) ## Loaded for dplyr
+library(lubridate) ## loaded for dates
+library(gtrendsR) ## Pull Google Trend data
+library(gridExtra) ## Arrange multiple plots
+```
+
+## Are NFTs a Good Investment?
+
+The  data https://www.kaggle.com/mathurinache/nft-history-sales I sourced this data from the kaggle public datasets. The purpose of this dataset was to help on how to make money using NFT and AI.
+We are going to manipulate this data to look for trends and speculate about the future of the NFT market.
+```{r warning= FALSE}
+#Data
+NFT_data <- read.csv('../DataScience/NFT_Sales.csv')
+
+head(NFT_data, 10)
+
+```
+
+
+```{r echo=FALSE}
+#Prepping data
+#Add columns for Year, Month, and Day so we can group data by year/month/day
+Year <- format(as.Date(NFT_data$Date, format = "%Y-%m-%d"), "%Y")
+NFT_data$Year <- Year
+Month <- format(as.Date(NFT_data$Date, format = "%Y-%m-%d"), "%m")
+Day <- format(as.Date(NFT_data$Date, format = "%Y-%m-%d"), "%d")
+NFT_data$Date <- ymd(NFT_data$Date)
+NFT_data$Month <- month(NFT_data$Date)
+NFT_data$Year <- year(NFT_data$Date)
+NFT_data$Day <- day(NFT_data$Date)
+
+#Convert USD Sales to Etherium
+ETH_conversion <- NFT_data$Sales_USD / 4214.16 
+options(scipen = 999)
+# Apply format function "3 digits", Add column to data frame
+NFT_data$ETH  <- round(ETH_conversion, 3)
+
+#Convert date to format R can plot
+NFT_data$Date <- as.Date(NFT_data$Date, format = "%Y-%m-%d")
+
+#Dataframe only has cumulative average sales so we will need to make a new column for the average NFT price by day
+DailyAvg <- (NFT_data$Sales_USD / NFT_data$Number_of_Sales)
+NFT_data$DailyAvg  <- round(DailyAvg, 2)
+
+```
+
+---
+
+### Active Wallets
+
+```{r warning=FALSE, message=FALSE}
+#Grouping data by date
+Wallets <- NFT_data %>%  select(Active_Market_Wallets, Year, Month )  %>% 
+arrange(desc(Active_Market_Wallets))
+
+#Filtering years 2017, 2019, 2021
+Wallets %>% filter(Year== "2017"|Year== "2019"|Year== "2021") %>% group_by(Year, Month) %>% summarise(walletsum = mean(Active_Market_Wallets)) %>%
+
+ggplot() + geom_col(mapping = aes(x = Month , y = walletsum)) + facet_wrap(~ Year) + ggtitle('Active Wallets') +
+ ylab('Number of Wallets') + xlab('Months')
+```
+
+The number of active wallets reflects the size of the population potentially trading in NFTs. Our plot with the number of active wallets shows rapid growth, especially during 2021. Our takeaway is that people are becoming more comfortable with the idea of NFTs having real value. 
+(Notice there is a random peak in December of 2017, we will speculate why later.)  
+
+---
+
+### Peak Sales 2021
+```{r warning=FALSE, message=FALSE}
+#Showing sales for 2020 converted to Etherium
+ggplot(NFT_data %>% filter(Year > 2020) )+ geom_line(aes(x = Date, y = ETH), alpha = .4)
+
+NFT_data %>% slice_max(ETH, n = 10)
+
+```
+
+---
+
+### Daily Sales Average
+```{r warning=FALSE, message=FALSE}
+#Using created column for average NFT price by day to see 
+#Adjust y-limits to see the trend for 2017-2020 more clearly
+daily_sales_average17 <- NFT_data %>% filter(Year== "2017") %>%  ggplot(aes(x = Date, y = DailyAvg)) + geom_line() + ylim(0, 1000)
+daily_sales_average18 <- NFT_data %>% filter(Year== "2018") %>%  ggplot(aes(x = Date, y = DailyAvg)) + geom_line() + ylim(0, 1000)
+daily_sales_average19 <- NFT_data %>% filter(Year== "2019") %>%  ggplot(aes(x = Date, y = DailyAvg)) + geom_line() + ylim(0, 1000)
+daily_sales_average20 <- NFT_data %>% filter(Year== "2020") %>%  ggplot(aes(x = Date, y = DailyAvg)) + geom_line() + ylim(0, 1000)
+daily_sales_average21 <- NFT_data %>% filter(Year== "2021") %>%  ggplot(aes(x = Date, y = DailyAvg)) + geom_line() + ylim(0, 7000)
+#Arranging how graph will display
+grid.arrange(daily_sales_average17,  daily_sales_average18, daily_sales_average19, daily_sales_average20, daily_sales_average21, ncol = 2, top = "Daily Sales Average")
+#This shows that the average price per NFT is trending upwards despite the rapidly increasing number of NFTs on the market.
+#We can infer that NFTs aren't being devalued due to market flooding
+
+```
+ 
+ The plots with the daily average sale price per NFT shows that despite sporadic spikes the average sales price is still trending upwards. We take that as an indicator that NFTs are holding their value right now, even with the surge in the number of NFTs on the market.
+ 
+---
+
+### Primary vs Secondary Sales
+```{r warning=FALSE, message=FALSE}
+#"Primary Sales" are sales between the creator and a collector
+#"Secondary Sales" are sales on secondary marketplaces such as OpenSea or Solanart
+ggplot(data = NFT_data, mapping = aes(x = Date)) +
+  geom_line(aes(y = Primary_Sales_cumsum), color = "blue") +
+  geom_line(aes(y = Secondary_Sales_cumsum), color = "red") +
+  ylab("Sales") +
+  ggtitle("Blue = Primary, Red = Secondary")
+#Clearly the vast majority of NFTs are bought straight from the creator
+#We can infer that the majority of customers buying NFTs are holding onto them rather than trying to resell. I think that indicates people are treating NFTs as an investment
+
+```
+
+
+The vast difference in the primary vs secondary sales indicates that the majority consumers aren't selling their NFTs, rather treating the NFTs like an investment. It also tells us that creators are getting the majority of the profits. Some artists even get a royalty on the resale of their NFTs. The advantage of easy authentication and fair artist compensation could be a driving force behind maintaining NFT relevance.
+
+---
+
+### Why was there a spike in December 2017?
+
+```{r warning=FALSE, message=FALSE}
+#We noticed a spike in December 2017 in both the number of active wallets and number of sales that did not follow the typical trend in the data.
+#Filter data to just 2017 and 2018 to highlight the specific spike
+early_years <- NFT_data %>% filter(Year== "2017"|Year== "2018")
+#Plot both active wallets and sales to show spike happened simultaneously
+active_wallets_vs_sales <- ggplot(data = early_years, mapping = aes(x = Date, y = Active_Market_Wallets)) + geom_line() + geom_line(data = early_years, aes(x = Date, y = ETH), color = "red") + ylab("Sales vs Wallets")
+
+active_wallets_vs_sales
+
+#After doing some research we found a BBC article from the same month and year reporting on a surge in sales of "Crypto Kitties" (one of the earliest examples of NFTs)
+
+```
+
+We noticed a spike in December 2017 in both the number of active wallets and number of sales that did not follow the typical trend in the data. After doing some research we found a BBC article from the same month and year reporting on a surge in sales of "Crypto Kitties" (one of the earliest examples of NFTs). Etherium reported a "sixfold increase in pending transactions"[@BBC] that would account for the spike.
+
+---
+
+### Google Trends
+```{r warning=FALSE, message=FALSE, fig.show='hide'}
+#Taking the data from google trends, specifying NFT keywords and defining regions, time, and what site we want results from
+#Lets compare the interest from the origin of NFTs and Crypto to present day to see if there are any similarities
+google_NFT <- gtrends(keyword = "NFT", geo = c("US", "CA", "JP", "GB", "HK"), time = "2017-06-22 2021-12-4", gprop = c("web"))
+#crypto vs cryptocurrency were similar enough that I just used crypto
+google_crypto <- gtrends(keyword = "crypto", geo = c("US", "CA", "JP", "GB", "HK"), time = "2009-12-4 2021-12-4", gprop = c("web"))
+#Plotting the data we took from google trends
+NFT_trend <- plot(google_NFT)
+Cryptocurrency_trend <- plot(google_crypto)
+```
+
+```{r warning=FALSE, message=FALSE}
+#Arranging plots for display
+grid.arrange(NFT_trend, Cryptocurrency_trend, ncol = 1, top = "NFT vs Crypto")
+#I think the similarity in the graphs could be an indicator that NFTs are more than a fad. People thought cryptocurrency was ridiculous but now it appears here to stay.
+```
+
+We used google trends to try and quantify interest in NFTs and Cryptocurrency. The similarities between the trends, we believe, indicate that the NFT market will behave similarly to the crypto market. There is a relationship between crypto and NFTs, as people get more interested/invested in crypto, the same growth occurs with NFTs.
+The main limitation of the data would be the lack of details given about the individual NFTs being traded. If we knew the type of the NFT being sold we could make generalizations about the investment potential. We also don't have a description of the individual NFTs or the sale price, this information would have given us more insight into which NFTs are in the highest demand. There is also no data about which marketplace the NFTs are being traded in or how they are being bought. We could have seen which marketplaces were getting the most traffic and what types of NFTs were most popular on the different marketplaces.
+
+---
+
+### Summary
+So, are NFTs a good investment? Maybe. Everything in our data points towards growth. The NFT market (like the crypto market) will fluctuate wildly between highs and lows as the public begins to understand NFTs. Right now the NFT market is a gamble, especially for the rich people that are spending crazy amounts of money on individual NFTs. Some people are convinced that the NFT craze is simply a craze. An Australian man created a website where you can download every NFT on the Etherium blockchain for free, in an effort to show that simply having proof of ownership over an image is pointless. Based on what we know about the crypto market and the findings from our data we conclude that NFT evaluations are definitely inflated, but just how inflated we can't tell for sure. Knowing this we would treat NFTs as a gamble and not a sound investment. There is a bubble, and it is going to pop...eventually.
+
+---
+
+### Sources
+1) BBC. (2017, December 5). Cryptokitties craze slows down transactions on Ethereum. BBC News. Retrieved December 5, 2021, from https://www.bbc.com/news/technology-42237162.
+2) Locke, T. (2021, December 3). This 24-year-old artist has made over $300,000 in 10 months selling nfts: 'I hope to inspire more creatives who look like me'. CNBC. Retrieved December 5, 2021, from https://www.cnbc.com/amp/2021/12/03/24-year-old-artist-made-over-300000-dollars-in-10-months-selling-nfts.html.
+3) Aché, M. (2021, November 12). NFT history sales. Kaggle. Retrieved December 5, 2021, from https://www.kaggle.com/mathurinache/nft-history-sales.
+4) The NFT Bay is the galaxy's most resilient NFT BitTorrent site! (n.d.). Retrieved December 5, 2021, from https://thenftbay.org/.
+5) BBC. (2021, November 19). 'piracy' website offers NFT art as free downloads. BBC News. Retrieved December 5, 2021, from https://www.bbc.com/news/technology-59262326.
+
