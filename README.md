@@ -8,15 +8,15 @@ This project explores and analyzes NFT market trends to understand market dynami
 
 **Key Insight**: We discovered a significant positive correlation between NFTs and cryptocurrency interest, though data availability currently limits reliable market predictions.
 
-## 📈 Objectives
+## Objectives
 
-- ✅ Analyze NFT market trends using RStudio and statistical methods
-- ✅ Quantify public interest patterns using Google Trends data
-- ✅ Identify and measure correlations between NFTs and cryptocurrency
-- ✅ Explore temporal patterns and market seasonality
-- ✅ Provide insights for future market forecasting
+- Analyze NFT market trends using RStudio and statistical methods
+- Quantify public interest patterns using Google Trends data
+- Identify and measure correlations between NFTs and cryptocurrency
+- Explore temporal patterns and market seasonality
+- Provide insights for future market forecasting
 
-## 🔍 Key Findings
+## Key Findings
 
 | Finding | Details |
 |---------|---------|
@@ -25,7 +25,7 @@ This project explores and analyzes NFT market trends to understand market dynami
 | **Trends** | Seasonal patterns and adoption cycles identified |
 | **Volatility** | Market shows significant interest fluctuations over time |
 
-## 📁 Project Structure
+## Project Structure
 
 ```
 yohernan/NFTs/
@@ -48,13 +48,13 @@ yohernan/NFTs/
 | **ggplot2** | Advanced data visualization |
 | **R Markdown** | Dynamic document generation |
 
-## 📊 Data Sources
+## Data Sources
 
 - **Google Trends API** - Search interest data for NFTs and cryptocurrency
 - **Time Period**: Historical search trends from gtrendsR
 - **Resolution**: Weekly/monthly aggregated interest metrics
 
-## 🚀 Quick Start
+## Quick Start
 
 ### Prerequisites
 - R (version 3.6+)
@@ -85,7 +85,7 @@ yohernan/NFTs/
 rmarkdown::render("Final_Project_NFTs.Rmd")
 ```
 
-## 📖 Documentation
+## Documentation
 
 - **Main Analysis**: See `Final_Project_NFTs.Rmd` for detailed methodology and code
 - **Interactive Results**: Open `Final_Project_NFTs.nb.html` to view analysis with outputs
@@ -106,7 +106,7 @@ rmarkdown::render("Final_Project_NFTs.Rmd")
 - Trend analysis
 - Seasonal decomposition (if applicable)
 
-## 📊 Key Visualizations
+## Key Visualizations
 
 The project includes:
 - Trend lines showing NFT interest over time
@@ -114,46 +114,14 @@ The project includes:
 - Seasonal pattern analysis
 - Comparative market interest graphs
 
-## 🤝 Contributing
-
-Contributions are welcome! To improve this project:
-
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/improvement`)
-3. Make your changes
-4. Submit a pull request
-
-### Potential Improvements
-- [ ] Expand data sources beyond Google Trends
-- [ ] Implement predictive modeling
-- [ ] Add more sophisticated time series analysis
-- [ ] Create interactive Shiny dashboard
-- [ ] Extend analysis to other blockchain assets
-
-## 🔗 Related Resources
+## Related Resources
 
 - [Google Trends](https://trends.google.com/)
 - [gtrendsR Documentation](https://github.com/PMassicotte/gtrendsR)
 - [R Markdown Guide](https://rmarkdown.rstudio.com/)
 - [tidyverse](https://www.tidyverse.org/)
 
-## 📄 License
-
-This project is open source and available under the MIT License. See LICENSE file for details.
-
-## 👤 Author
-
-**yohernan** - [@yohernan](https://github.com/yohernan)
 
 - 📧 GitHub: https://github.com/yohernan
 - 📊 Project: NFT Market Analysis
 
-## 📞 Questions or Feedback?
-
-Feel free to open an issue on GitHub or reach out directly!
-
----
-
-**Last Updated**: May 2026  
-**Status**: Active Analysis  
-**Data Freshness**: See repository commits for latest data updates
