@@ -1,8 +1,8 @@
-# 📊 NFT Market Analysis
+# NFT Market Analysis
 
 A comprehensive data-driven analysis of NFT market trends and their correlation with cryptocurrency markets using R and statistical analysis.
 
-## 🎯 Project Overview
+## Project Overview
 
 This project explores and analyzes NFT market trends to understand market dynamics and predict future developments. Through rigorous statistical analysis and data visualization, we examine the relationship between NFT interest and cryptocurrency markets using real-world search interest data.
 
@@ -29,15 +29,15 @@ This project explores and analyzes NFT market trends to understand market dynami
 
 ```
 yohernan/NFTs/
-├── Final_Project_NFTs.Rmd           # 📄 Main analysis and methodology
-├── Final_Project_NFTs.nb.html       # 🌐 Interactive HTML notebook (analysis)
-├── FinalPresentation.Rmd            # 🎤 Presentation slides
-├── FinalPresentation.html           # 🌐 HTML presentation output
-├── README.md                        # 📖 This file
-└── .gitignore                       # 🚫 Git ignore rules
+├── Final_Project_NFTs.Rmd           # Main analysis and methodology
+├── Final_Project_NFTs.nb.html       # Interactive HTML notebook (analysis)
+├── FinalPresentation.Rmd            # Presentation slides
+├── FinalPresentation.html           # HTML presentation output
+├── README.md                        # This file
+└── .gitignore                       # Git ignore rules
 ```
 
-## 🛠️ Tech Stack
+## Tech Stack
 
 | Tool | Purpose |
 |------|---------|
@@ -91,7 +91,7 @@ rmarkdown::render("Final_Project_NFTs.Rmd")
 - **Interactive Results**: Open `Final_Project_NFTs.nb.html` to view analysis with outputs
 - **Presentation**: View `FinalPresentation.html` for key takeaways
 
-## 📝 Methodology
+## Methodology
 
 ### Approach
 1. **Data Collection** - Extract Google Trends data for NFTs and cryptocurrency
@@ -122,6 +122,6 @@ The project includes:
 - [tidyverse](https://www.tidyverse.org/)
 
 
-- 📧 GitHub: https://github.com/yohernan
-- 📊 Project: NFT Market Analysis
+- GitHub: https://github.com/yohernan
+- Project: NFT Market Analysis
 
